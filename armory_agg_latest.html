@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fury Warrior — ICC 25HC BiS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #060911;
+    --card:      rgba(11,16,26,0.96);
+    --border:    rgba(255,255,255,0.055);
+    --border2:   rgba(255,255,255,0.10);
+    --gold:      #f0a429;
+    --gold-dim:  #9d6714;
+    --purple:    #a855f7;
+    --purple-dim:#6b21a8;
+    --green:     #34d399;
+    --pink:      #f472b6;
+    --tan:       #c79c6e;
+    --muted:     #475569;
+    --text:      #e2e8f0;
+    --text-dim:  #94a3b8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 100% 55% at 50% -5%,  rgba(163,53,238,0.13) 0%, transparent 60%),
+      radial-gradient(ellipse 50%  30% at 85% 110%, rgba(240,164,41,0.07) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='0.6' fill='rgba(255,255,255,0.025)'/%3E%3C/svg%3E");
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    /* ZVĚTŠENÍ CELÉHO OBSAHU */
+    zoom: 1.12; 
+  }
+
+  /* Zvětšení kontejneru pro lepší rozestup */
+  .page { max-width: 1450px; margin: 0 auto; padding: 40px 30px 70px; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 22px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    animation: fadeDown 0.5s ease both;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 280px; height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .header-title {
+    font-family: 'Cinzel', serif;
+    font-size: 36px; /* Zvětšeno */
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 6px;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(240,164,41,0.2);
+  }
+  .header-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; /* Zvětšeno */
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-top: 7px;
+  }
+  .header-badges { display: flex; gap: 8px; align-items: center; }
+  .badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 3px;
+  }
+  .badge-gold  { background: var(--gold); color: #1a0900; }
+  .badge-dim   { background: rgba(255,255,255,0.05); border: 1px solid var(--border2); color: var(--text-dim); }
+  .badge-purp  { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); }
+
+  .sec-head {
+    display: flex; align-items: center; gap: 14px;
+    padding-bottom: 14px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .sec-head::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0;
+    height: 1px; width: 180px;
+    background: linear-gradient(90deg, var(--purple), transparent);
+  }
+  .sec-head h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--purple); letter-spacing: 4px; text-transform: uppercase;
+  }
+  .sec-head .smeta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--white); text-transform: uppercase;
+  }
+
+  .equip-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr 340px; /* Sloupce mírně širší */
+    gap: 25px;
+    align-items: start;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .eq-col { display: flex; flex-direction: column; gap: 10px; }
+
+  .slot {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .slot::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(168,85,247,0.04) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .slot:hover {
+    border-color: rgba(168,85,247,0.38);
+    background: rgba(16,22,36,0.98);
+    transform: translateY(-1px);
+  }
+  .slot.leg  { border-color: rgba(240,164,41,0.18); }
+  .slot.leg::before { background: linear-gradient(135deg, rgba(240,164,41,0.05) 0%, transparent 55%); }
+  .slot.leg:hover   { border-color: rgba(240,164,41,0.45); }
+
+  .left-col .slot { flex-direction: row-reverse; text-align: right; }
+  .left-col .gems { align-items: flex-end; }
+  .left-col .gem-r { flex-direction: row-reverse; }
+
+  .sicon {
+    width: 48px; height: 48px; /* Zvětšeno */
+    border-radius: 5px; background: #000;
+    border: 2px solid rgba(168,85,247,0.4);
+    flex-shrink: 0; image-rendering: pixelated;
+  }
+  .slot.leg .sicon { border-color: rgba(240,164,41,0.55); }
+
+  .sinfo { flex: 1; min-width: 0; }
+  .slotlbl {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .sname {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: #c084fc; line-height: 1.25; margin-bottom: 3px;
+  }
+  .slot.leg .sname { color: #fbbf24; }
+  .sench {
+    display: block;
+    font-size: 11px; color: var(--green);
+    font-style: italic; margin-bottom: 5px; opacity: 0.85;
+  }
+  .gems {
+    display: flex; flex-direction: column; gap: 4px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding-top: 6px;
+  }
+  .gem-r {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--pink);
+    font-weight: 600; letter-spacing: 0.3px;
+  }
+  .gico { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; }
+  .nosock { color: #334155; font-size: 10px; }
+
+  .center {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+  }
+  .char-name {
+    font-family: 'Cinzel', serif;
+    font-size: 58px; font-weight: 900;
+    color: var(--tan); letter-spacing: 14px;
+    text-align: center; line-height: 1;
+    text-shadow: 0 0 80px rgba(199,156,110,0.12);
+  }
+  .char-spec {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--muted);
+    margin-top: 8px; margin-bottom: 25px;
+  }
+
+  .stats-row {
+    display: flex; gap: 10px; width: 100%; margin-bottom: 25px;
+  }
+  .sbox {
+    flex: 1; background: rgba(11,16,26,0.9);
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 12px 8px; text-align: center;
+  }
+  .sval {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 800;
+    color: var(--gold); line-height: 1;
+  }
+  .slbl {
+    display: block; font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px;
+  }
+
+  .weapons { display: flex; gap: 15px; justify-content: center; width: 100%; }
+  .wcard {
+    background: rgba(11,16,26,0.9);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 16px;
+    width: 200px; text-align: center;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .wcard:hover { transform: translateY(-3px); }
+  .wcard.leg-w {
+    border-color: rgba(240,164,41,0.28);
+    background: rgba(18,12,3,0.95);
+  }
+  .wcard.leg-w::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .wbadge {
+    display: inline-block; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 2px; margin-bottom: 12px;
+  }
+  .wb-leg  { background: rgba(240,164,41,0.13); border: 1px solid rgba(240,164,41,0.3); color: var(--gold); }
+  .wb-epic { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); }
+  .wico {
+    width: 64px; height: 64px; border-radius: 6px;
+    background: #000; margin: 0 auto 12px; display: block;
+    image-rendering: pixelated;
+  }
+  .leg-w .wico { border: 2px solid rgba(240,164,41,0.5); }
+  .wcard:not(.leg-w) .wico { border: 2px solid rgba(168,85,247,0.4); }
+  .wname {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 700;
+    display: block; margin-bottom: 4px;
+  }
+  .leg-w .wname { color: #fbbf24; }
+  .wcard:not(.leg-w) .wname { color: #c084fc; }
+  .wench {
+    font-size: 11px; color: var(--green);
+    font-style: italic; display: block; margin-bottom: 10px;
+  }
+  .wgems {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 8px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-size: 11px; color: var(--pink);
+  }
+
+  .set-bonus {
+    margin-top: 20px; width: 100%;
+    background: rgba(168,85,247,0.07);
+    border: 1px solid rgba(168,85,247,0.18);
+    border-radius: 7px; padding: 12px 16px;
+  }
+  .sb-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700;
+    color: var(--purple); letter-spacing: 2.5px;
+    text-transform: uppercase; margin-bottom: 8px; display: block;
+  }
+  .sb-line {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--muted); margin-bottom: 5px;
+  }
+  .sb-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--purple); flex-shrink: 0;
+  }
+  .sb-line.on { color: #c4b5fd; }
+  .sb-line.on .sb-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+  /* Ostatní styly zůstávají stejné, zoom se o ně postará automaticky */
+  .divider { height: 1px; margin: 60px 0; background: linear-gradient(90deg, transparent, rgba(168,85,247,0.3), rgba(240,164,41,0.2), transparent); position: relative; }
+  .divider-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg); padding: 0 20px; font-family: 'Cinzel', serif; font-size: 12px; color: var(--muted); letter-spacing: 4px; text-transform: uppercase; white-space: nowrap; }
+
+  .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; animation: fadeUp 0.5s 0.15s ease both; }
+  .rcard { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .rcard-head { background: rgba(255,255,255,0.028); border-bottom: 1px solid var(--border); padding: 10px 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .rcard-body { padding: 8px 0; }
+  .irow { display: flex; align-items: center; padding: 6px 14px; gap: 8px; transition: background 0.15s; }
+  .ilbl { font-size: 12px; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 4px; }
+  .ipct { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); width: 35px; text-align: right; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+  .big-card { background: var(--card); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+  .big-head { background: rgba(255,255,255,0.028); border-bottom: 1px solid var(--border); padding: 12px 18px; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .grow { display: flex; align-items: center; padding: 8px 18px; gap: 12px; }
+  .gname { font-size: 12px; font-weight: 600; color: #cbd5e1; flex: 1; }
+
+  .foot { margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(14px);  } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-title">EQUIPMENT BLUEPRINT</div>
+      <div class="header-sub">Warmane · 3.3.5a</div>
+    </div>
+    <div class="header-badges">
+      <div class="badge badge-dim">WotLK</div>
+      <div class="badge badge-dim">Phase 4</div>
+      <div class="badge badge-purp">TOP 20 Warriors</div>
+      <div class="badge badge-gold">UwU Logs</div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <h2>Best in Slot</h2>
+    <div class="smeta">Based on real data</div>
+  </div>
+
+  <div class="equip-grid">
+
+    <div class="eq-col left-col">
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_158.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Head</span>
+          <span class="sname">Sanctified Ymirjar Helmet</span>
+          <span class="sench">✦ Arcanum of Torment</span>
+          <div class="gems">
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/small/inv_misc_gem_diamond_07.jpg" class="gico"> Relentless Earthsiege Diamond</div>
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Fractured Cardinal Ruby</div>
+          </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelry_necklace_48.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Neck</span>
+          <span class="sname">Penumbra Pendant</span>
+          <span class="sench"></span>
+          <div class="gems">
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/small/inv_misc_gem_topaz_02.jpg" class="gico"> Etched Ametrine</div>
+          </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_shoulder_129.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Shoulders</span>
+          <span class="sname">Sanctified Ymirjar Shoulderplates</span>
+          <span class="sench">✦ Greater Inscription of the Axe</span>
+          <div class="gems">
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/small/inv_misc_gem_ruby_02.jpg" class="gico"> Fractured Cardinal Ruby</div>
+          </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_chest_plate_25.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Chest</span>
+          <span class="sname">Sanctified Ymirjar Battleplate</span>
+          <span class="sench">✦ Enchant Chest — Powerful Stats</span>
+          <div class="gems">
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Fractured Cardinal Ruby</div>
+            <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/small/inv_misc_gem_pearl_12.jpg" class="gico"> Nightmare Tear</div>
+          </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/item_icecrownringa.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Ring 1</span>
+          <span class="sname">Frostbrood Sapphire Ring</span>
+          <span class="sench"></span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Fractured Cardinal Ruby</div></div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelry_ring_81.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Ring 2</span>
+          <span class="sname">Ashen Band of Endless Vengeance</span>
+          <span class="sench"></span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/small/inv_misc_gem_topaz_02.jpg" class="gico"> Etched Ametrine</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="char-name">FURY WARRIOR</div>
+      
+
+      <div class="stats-row">
+        <div class="sbox"><span class="sval">~6700</span><span class="slbl">Gear Score</span></div>
+        <div class="sbox"><span class="sval">18 / 53 / 0</span><span class="slbl">Talents</span></div>
+        <div class="sbox"><span class="sval">4 piece</span><span class="slbl">T10 Bonus</span></div>
+        
+      </div>
+
+      <div class="weapons">
+        <div class="wcard leg-w">
+          <div class="wbadge wb-leg">Legendary</div>
+          <img src="https://wow.zamimg.com/images/wow/icons/large/inv_axe_113.jpg" class="wico">
+          <span class="wname">Shadowmourne</span>
+          <span class="wench">Enchant Weapon — Berserking</span>
+          <div class="wgems">3× Fractured Ruby</div>
+        </div>
+        <div class="wcard">
+          <div class="wbadge wb-epic">Epic</div>
+          <img src="https://wow.zamimg.com/images/wow/icons/large/inv_sword_153.jpg" class="wico">
+          <span class="wname">Glorenzelg</span>
+          <span class="wench">Enchant Weapon — Berserking</span>
+          <div class="wgems">3× Fractured Ruby</div>
+        </div>
+      </div>
+
+      <div class="set-bonus">
+        <span class="sb-title">T10 Bonus Active</span>
+        <div class="sb-line on"><div class="sb-dot"></div> 2pc — Bloodthirst heals for 100% more</div>
+        <div class="sb-line on"><div class="sb-dot"></div> 4pc — Slam & BT grant 12% Haste (6s)</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
+        <div class="slot leg" style="flex: 1;">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_rubysanctum4.jpg" class="sicon">
+          <div class="sinfo">
+            <span class="slotlbl">Trinket 1</span>
+            <span class="sname">Sharpened Twilight Scale</span>
+          </div>
+        </div>
+        <div class="slot leg" style="flex: 1;">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelry_trinket_04.jpg" class="sicon">
+          <div class="sinfo">
+            <span class="slotlbl">Trinket 2</span>
+            <span class="sname">Deathbringer's Will</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-col">
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_cape_18.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Cloak</span>
+          <span class="sname">Sylvanas' Cunning</span>
+          <span class="sench">✦ Enchant Cloak — Speed</span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div></div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_bracer_41.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Wrist</span>
+          <span class="sname">Umbrage Armbands</span>
+          <span class="sench">✦ Greater Assault</span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div></div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_gauntlets_79.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Hands</span>
+          <span class="sname">Aldriana's Gloves</span>
+          <span class="sench">✦ Hyperspeed Accelerators</span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div>
+        <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div>
+        </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_belt_61.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Belt</span>
+          <span class="sname">Astrylian's Sutured Cinch</span>
+          <span class="sench">✦ Eternal Belt Buckle</span>
+          <div class="gems"><div class="gem-r">Ruby & Ametrine</div></div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_pants_plate_32.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Legs</span>
+          <span class="sname">Sanctified Ymirjar Legplates</span>
+          <span class="sench">✦ Icescale Leg Armor</span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div>
+          <div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Bold Cardinal Ruby</div>
+        </div>
+        </div>
+      </div>
+      <div class="slot">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_boots_plate_12.jpg" class="sicon">
+        <div class="sinfo">
+          <span class="slotlbl">Boots</span>
+          <span class="sname">Apocalypse's Advance</span>
+          <span class="sench">✦ Nitro Boosts</span>
+          <div class="gems"><div class="gem-r"><img src="https://wow.zamimg.com/images/wow/icons/large/inv_jewelcrafting_gem_37.jpg" class="gico"> Fractured Cardinal Ruby</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-icon">Data Analysis · n=20</span></div>
+
+  </div>
+</body>
+</html>
